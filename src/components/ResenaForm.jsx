@@ -29,7 +29,7 @@ const ResenaForm = ({ onDone }) => {
     try {
       await crearResena({ contenido, idlibro, idusuario });
       setContenido('');
-      onDone?.(); // opcional para refrescar la lista
+      onDone?.(); //refrescar la lista
     } catch (err) {
       setError('Error al crear reseña: ' + err.message);
     }

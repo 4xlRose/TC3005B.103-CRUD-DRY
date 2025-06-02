@@ -1,4 +1,3 @@
-import React from 'react';
 import ResenaList from '../components/ResenaList';
 
 const Resenas = () => {

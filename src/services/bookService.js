@@ -11,7 +11,6 @@ export const getBooksByUser = async (idusuario) => {
   return data;
 };
 
-
 export const getTopBooks = async (idusuario) => {
   const { data, error } = await supabase
     .from('libro')

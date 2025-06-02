@@ -35,7 +35,7 @@ const BookList = () => {
   return (
     <div>
     <div className="page-container">
-      <h2>📖 Historial de Lectura</h2>
+      <h2><i className="bi bi-book-half me-2"></i> Historial de Lectura</h2>
       {mensaje && <div className="alert alert-success">{mensaje}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
       <ul className="list-group">
