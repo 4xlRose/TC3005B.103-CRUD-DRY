@@ -3,6 +3,9 @@ import Home from './pages/Home';
 import Historial from './pages/Historial';
 import NuevoLibro from './pages/NuevoLibro';
 import EditarLibro from './pages/EditarLibro';
+import Resenas from './pages/ResenasL';
+
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // lo usaremos para personalización extra
 
@@ -30,6 +33,11 @@ function App() {
                 <i className="bi bi-plus-circle me-2"></i>Nuevo Libro
               </Link>
             </li>
+            <li className="nav-item mb-2">
+              <Link to="/resenas" className="nav-link text-light">
+                <i className="bi bi-chat-square-text me-2"></i>Mis Reseñas
+              </Link>
+            </li> 
           </ul>
         </nav>
 
@@ -39,6 +47,7 @@ function App() {
             <Route path="/historial" element={<Historial />} />
             <Route path="/nuevo" element={<NuevoLibro />} />
             <Route path="/editar/:id" element={<EditarLibro />} />
+            <Route path="/resenas" element={<Resenas />} />
           </Routes>
         </main>
       </div>
