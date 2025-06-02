@@ -5,7 +5,7 @@ export const getUserById = async (idusuario) => {
     .from('usuario')
     .select('*')
     .eq('idusuario', idusuario)
-    .single(); // como esperamos solo 1
+    .single(); 
 
   if (error) throw new Error('Error al obtener usuario: ' + error.message);
   return data;

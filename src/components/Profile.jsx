@@ -8,7 +8,7 @@ const Profile = () => {
   const [usuario, setUsuario] = useState(null);
   const [error, setError] = useState('');
 
-  const idusuario = 1; // usa el mismo ID que insertaste en la tabla usuario
+  const idusuario = 1; // mi usuario en la db
 
   useEffect(() => {
     const fetchData = async () => {

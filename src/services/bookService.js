@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient';
 export const getBooksByUser = async (idusuario) => {
   const { data, error } = await supabase
     .from('libro')
-    .select('*') // puedes reemplazar con campos específicos si quieres
+    .select('*') 
     .eq('idusuario', idusuario)
     .order('fecha_lectura', { ascending: false });
 
