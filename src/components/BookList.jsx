@@ -11,7 +11,7 @@ const BookList = () => {
   const fetchBooks = async () => {
     try {
       const data = await getBooksByUser(idusuario);
-      setBooks(data);
+      setBooks(data || []);
     } catch (err) {
       setError(err.message);
     }
@@ -34,25 +34,35 @@ const BookList = () => {
 
   return (
     <div>
-    <div className="page-container">
-      <h2><i className="bi bi-book-half me-2"></i> Historial de Lectura</h2>
-      {mensaje && <div className="alert alert-success">{mensaje}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
-      <ul className="list-group">
-        {books.map((book) => (
-          <li key={book.idlibro} className="list-group-item d-flex justify-content-between">
-            <div>
-              <strong>{book.titulo}</strong> — {book.calificacion}/10
-              <br />
-              <small>{book.fecha_lectura}</small>
-            </div>
-            <div>
-              <Link to={`/editar/${book.idlibro}`} className="btn btn-sm btn-warning me-2">Editar</Link>
-              <button className="btn btn-sm btn-danger" onClick={() => handleDelete(book.idlibro)}>Eliminar</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="page-container">
+        <h2><i className="bi bi-book-half me-2"></i> Historial de Lectura</h2>
+        {mensaje && <div className="alert alert-success">{mensaje}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+        <ul className="list-group">
+          {books.map((book) => (
+            <li key={book.idlibro} className="list-group-item d-flex justify-content-between align-items-center">
+              <div className="d-flex align-items-center">
+                {book.imagen && (
+                  <img
+                    src={book.imagen}
+                    alt="Portada"
+                    className="me-3 rounded"
+                    style={{ width: '60px', height: '80px', objectFit: 'cover' }}
+                  />
+                )}
+                <div>
+                  <strong>{book.titulo}</strong> — {book.calificacion}/10
+                  <br />
+                  <small>{book.fecha_lectura}</small>
+                </div>
+              </div>
+              <div>
+                <Link to={`/editar/${book.idlibro}`} className="btn btn-sm btn-warning me-2">Editar</Link>
+                <button className="btn btn-sm btn-danger" onClick={() => handleDelete(book.idlibro)}>Eliminar</button>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

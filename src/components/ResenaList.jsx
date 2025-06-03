@@ -60,52 +60,64 @@ const ResenaList = () => {
       {resenas.length === 0 && <p className="text-muted">Aún no has publicado ninguna reseña.</p>}
 
       {resenas.map((r) => (
-        <div key={r.idresena} className="mb-4 p-3 rounded bg-secondary text-light">
-          <h5>{r.libro.titulo}</h5>
-          <small className="text-muted">{new Date(r.fecha).toLocaleString()}</small>
+  <div key={r.idresena} className="mb-4 p-3 rounded bg-secondary text-light d-flex">
+    {r.libro?.imagen && (
+      <img
+        src={r.libro.imagen}
+        alt="Portada"
+        className="me-3 rounded"
+        style={{ width: '70px', height: '100px', objectFit: 'cover' }}
+      />
+    )}
+    <div className="flex-grow-1">
+      <h5>{r.libro.titulo}</h5>
+      <small className="text-muted">
+        {new Date(r.fecha + 'Z').toLocaleString()}
+      </small>
+      {editando === r.idresena ? (
+        <>
+          <textarea
+            className="form-control my-2"
+            value={nuevoContenido}
+            onChange={(e) => setNuevoContenido(e.target.value)}
+          />
+          <button
+            className="btn btn-success btn-sm me-2"
+            onClick={() => handleEdit(r.idresena)}
+          >
+            Guardar
+          </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setEditando(null)}
+          >
+            Cancelar
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="mt-2">{r.contenido}</p>
+          <button
+            className="btn btn-warning btn-sm me-2"
+            onClick={() => {
+              setEditando(r.idresena);
+              setNuevoContenido(r.contenido);
+            }}
+          >
+            Editar
+          </button>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={() => handleDelete(r.idresena)}
+          >
+            Eliminar
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+))}
 
-          {editando === r.idresena ? (
-            <>
-              <textarea
-                className="form-control my-2"
-                value={nuevoContenido}
-                onChange={(e) => setNuevoContenido(e.target.value)}
-              />
-              <button
-                className="btn btn-success btn-sm me-2"
-                onClick={() => handleEdit(r.idresena)}
-              >
-                Guardar
-              </button>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => setEditando(null)}
-              >
-                Cancelar
-              </button>
-            </>
-          ) : (
-            <>
-              <p className="mt-2">{r.contenido}</p>
-              <button
-                className="btn btn-warning btn-sm me-2"
-                onClick={() => {
-                  setEditando(r.idresena);
-                  setNuevoContenido(r.contenido);
-                }}
-              >
-                Editar
-              </button>
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => handleDelete(r.idresena)}
-              >
-                Eliminar
-              </button>
-            </>
-          )}
-        </div>
-      ))}
     </div>
   );
 };

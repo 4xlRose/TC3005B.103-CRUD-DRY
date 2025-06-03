@@ -1,58 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createBook, updateBook, getBookById } from '../services/bookService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createBook, updateBook, getBooksByUser } from '../services/bookService';
+import { subirArchivo } from '../services/uploadService';
 
 const BookForm = () => {
+  const [titulo, setTitulo] = useState('');
+  const [calificacion, setCalificacion] = useState('');
+  const [fecha_lectura, setFechaLectura] = useState('');
+  const [imagenFile, setImagenFile] = useState(null);
+  const [error, setError] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
   const idusuario = 1;
 
-  const [libro, setLibro] = useState({
-    titulo: '',
-    autor: '',
-    genero: '',
-    fecha_lectura: '',
-    calificacion: '',
-    comentario: '',
-    idusuario,
-  });
-
-  const [error, setError] = useState('');
-  const [modoEdicion, setModoEdicion] = useState(false);
-
   useEffect(() => {
     if (id) {
-      setModoEdicion(true);
-      obtenerLibro(id);
+      getBookById(id).then((libro) => {
+        setTitulo(libro.titulo);
+        setCalificacion(libro.calificacion);
+        setFechaLectura(libro.fecha_lectura?.split('T')[0]);
+      });
     }
   }, [id]);
 
-  const obtenerLibro = async (idLibro) => {
-    try {
-      const data = await getBooksByUser(idusuario);
-      const encontrado = data.find((l) => l.idlibro === parseInt(idLibro));
-      if (!encontrado) {
-        setError('Libro no encontrado');
-      } else {
-        setLibro(encontrado);
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleChange = (e) => {
-    setLibro({ ...libro, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!titulo || !calificacion || !fecha_lectura) {
+      return setError('Todos los campos son obligatorios');
+    }
+
     try {
-      if (modoEdicion) {
+      const libro = { titulo, calificacion, fecha_lectura, idusuario };
+      let imagenURL = '';
+
+      if (imagenFile) {
+        const ruta = `libro-${Date.now()}.jpg`;
+        imagenURL = await subirArchivo(imagenFile, 'imagenes-libros', ruta);
+        libro.imagen = imagenURL;
+      }
+
+      if (id) {
         await updateBook(id, libro);
       } else {
         await createBook(libro);
       }
+
       navigate('/historial');
     } catch (err) {
       setError(err.message);
@@ -60,40 +52,55 @@ const BookForm = () => {
   };
 
   return (
-    <div>
     <div className="page-container">
-      <h2>{modoEdicion ? 'Editar Libro' : 'Agregar Libro'}</h2>
+      <h2>{id ? 'Editar Libro' : 'Registrar Libro'}</h2>
       {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit} className="row g-3">
-        <div className="col-md-6">
+
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
           <label className="form-label">Título</label>
-          <input type="text" name="titulo" className="form-control" value={libro.titulo} onChange={handleChange} required />
+          <input
+            className="form-control"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+          />
         </div>
-        <div className="col-md-6">
-          <label className="form-label">Autor</label>
-          <input type="text" name="autor" className="form-control" value={libro.autor} onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Género</label>
-          <input type="text" name="genero" className="form-control" value={libro.genero} onChange={handleChange} />
-        </div>
-        <div className="col-md-3">
-          <label className="form-label">Fecha de lectura</label>
-          <input type="date" name="fecha_lectura" className="form-control" value={libro.fecha_lectura} onChange={handleChange} />
-        </div>
-        <div className="col-md-3">
+
+        <div className="mb-3">
           <label className="form-label">Calificación (1-10)</label>
-          <input type="number" name="calificacion" className="form-control" value={libro.calificacion} onChange={handleChange} min="1" max="10" />
+          <input
+            type="number"
+            className="form-control"
+            value={calificacion}
+            onChange={(e) => setCalificacion(e.target.value)}
+            min="1"
+            max="10"
+          />
         </div>
-        <div className="col-12">
-          <label className="form-label">Comentario</label>
-          <textarea name="comentario" className="form-control" value={libro.comentario} onChange={handleChange}></textarea>
+
+        <div className="mb-3">
+          <label className="form-label">Fecha de lectura</label>
+          <input
+            type="date"
+            className="form-control"
+            value={fecha_lectura}
+            onChange={(e) => setFechaLectura(e.target.value)}
+          />
         </div>
-        <div className="col-12 text-end">
-          <button type="submit" className="btn btn-success">{modoEdicion ? 'Actualizar' : 'Guardar'}</button>
+
+        <div className="mb-3">
+          <label className="form-label">Imagen del libro</label>
+          <input
+            type="file"
+            className="form-control"
+            onChange={(e) => setImagenFile(e.target.files[0])}
+          />
         </div>
+
+        <button type="submit" className="btn btn-primary">
+          {id ? 'Actualizar' : 'Guardar'}
+        </button>
       </form>
-      </div>
     </div>
   );
 };
