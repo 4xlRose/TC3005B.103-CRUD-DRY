@@ -12,8 +12,6 @@ export const getBooksByUser = async (idusuario) => {
   return data; // ⬅️ YA contiene la URL pública, no hagas nada más
 };
 
-
-
 export const getTopBooks = async (idusuario) => {
   const { data, error } = await supabase
     .from('libro')
@@ -35,7 +33,6 @@ export const getBookById = async (idlibro) => {
   if (error) throw new Error('Error al obtener el libro: ' + error.message);
   return data;
 };
-
 
 export const createBook = async (libro) => {
   const { error } = await supabase.from('libro').insert(libro);

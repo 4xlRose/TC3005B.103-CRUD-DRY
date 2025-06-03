@@ -43,7 +43,7 @@ const Profile = () => {
           {usuario.fotoperfil && (
             <div className="mb-3">
               <img
-                src={usuario.fotoperfil}
+                src={`${usuario.fotoperfil}?t=${Date.now()}`}
                 alt="Foto de perfil"
                 className="img-thumbnail rounded-circle"
                 style={{ width: '120px', height: '120px', objectFit: 'cover' }}
